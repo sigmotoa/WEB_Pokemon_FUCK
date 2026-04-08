@@ -39,3 +39,11 @@ def showPokemons():
         return [PokemonID(**row) for row in reader]
 
 
+def showPokemon(id:int):
+    with open (CSV_FILE) as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            if int(row['id']) == id:
+                return PokemonID(**row)
+
+

@@ -1,6 +1,8 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from starlette.responses import JSONResponse
+
 from model import PokemonBase, PokemonID
-from operation import createPokemon, showPokemons
+from operation import createPokemon, showPokemons, showPokemon
 import csv
 import os
 
@@ -12,6 +14,11 @@ app = FastAPI()
 
 
 ##pokedex = []
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    return JSONResponse(status_code=exc.status_code, content={"message": f"{exc.detail} Ooops. TODOOO fallo"},)
+
 
 @app.post("/pokemon", response_model=PokemonID)
 async def catch_pokemon(pokemon: PokemonBase):
@@ -25,17 +32,17 @@ async def show_all_pokemon():
     pokemons = showPokemons()
     return pokemons
 
-'''
 
-@app.get("/pokemon/{id}", response_model=PokemonResponse)
+
+@app.get("/pokemon/{id}", response_model=PokemonID)
 async def show_pokemon(id: int):
-    with open(CSV_FILE, newline="") as file:
-        reader = csv.DictReader(file)
-        for p in reader:
-            if int(p["id"]) == id:
-                return PokemonResponse(**p)
-    raise HTTPException(status_code=404, detail="Pokemon no capturado aún")
+    pokemon = showPokemon(id)
+    if not(pokemon):
+        raise HTTPException(status_code=404, detail="Pokemon has not been caught")
+    return pokemon
 
+
+'''
 
 @app.get("/")
 async def root():
