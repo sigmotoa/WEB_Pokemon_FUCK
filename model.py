@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from enum import Enum, auto
+from typing import Optional
 
 class Tipo(str,Enum):
     HIERBA = "hierba"
@@ -16,4 +17,4 @@ class PokemonID(PokemonBase):
     id: int = Field(..., gt=0)
 
 class PokemonUpdate(PokemonBase):
-    level: int = Field(..., gt=0, le=100)
+    level: Optional[int] = Field(None, gt=0, le=100)
