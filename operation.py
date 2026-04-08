@@ -47,3 +47,27 @@ def showPokemon(id:int):
                 return PokemonID(**row)
 
 
+def updatePokemon(id:int, pokemon:PokemonBase):
+    pokemon_update : Optional[PokemonID] = None
+    pokemons = showPokemons()
+    for num, pokemon_ in enumerate(pokemons):
+        if pokemon_.id == id:
+            pokemons[num] = (pokemon_update) = pokemon_.model_copy(update=pokemon)
+    with open(CSV_FILE, mode="w", newline="") as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=columns)
+        writer.writeheader()
+        for pokemon_ in pokemons:
+            writer.writerow(pokemon_.model_dump())
+    if pokemon_update:
+        return pokemon_update
+
+
+
+
+
+
+
+
+
+
+
