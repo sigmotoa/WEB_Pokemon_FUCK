@@ -62,6 +62,22 @@ def updatePokemon(id:int, pokemon:PokemonBase):
         return pokemon_update
 
 
+def deletePokemon(id:int):
+    pokemon_deleted : Optional[PokemonBase] = None
+    pokemons = showPokemons()
+    with open (CSV_FILE, mode="w", newline="") as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=columns)
+        writer.writeheader()
+        for pokemon_ in pokemons:
+            if pokemon_.id == id:
+                pokemon_deleted = pokemon_
+                continue
+            writer.writerow(pokemon_.model_dump())
+    if pokemon_deleted:
+        dict_pokemon_no_id = pokemon_deleted.model_dump()
+        del dict_pokemon_no_id["id"]
+        return PokemonBase(**dict_pokemon_no_id)
+
 
 
 

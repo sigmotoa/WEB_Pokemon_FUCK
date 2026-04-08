@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Request
 from starlette.responses import JSONResponse
 
 from model import PokemonBase, PokemonID, PokemonUpdate
-from operation import createPokemon, showPokemons, showPokemon, updatePokemon
+from operation import createPokemon, showPokemons, showPokemon, updatePokemon, deletePokemon
 import csv
 import os
 
@@ -48,6 +48,12 @@ async def update_pokemon(id: int, pokemon_update: PokemonUpdate):
         raise HTTPException(status_code=404, detail="Pokemon has not been evolved")
     return updated
 
+@app.delete("/pokemon/{id}", response_model=PokemonBase)
+async def delete_pokemon(id: int):
+    deleted = deletePokemon(id)
+    if not (deleted):
+        raise HTTPException(status_code=404, detail="Pokemon has not been caught")
+    return deleted
 
 '''
 
