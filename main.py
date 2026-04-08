@@ -1,21 +1,14 @@
-from os.path import exists
-
 from fastapi import FastAPI, HTTPException
-from model import PokemonBase, PokemonResponse
+from model import PokemonBase
 import csv
 import os
 
 app = FastAPI()
 
-CSV_FILE = "pokedex.csv"
 
-def save_csv(pokemon:PokemonBase):
-    pokedex_exists = os.path.exists(CSV_FILE)
-    with open(CSV_FILE, "a+", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=pokemon.model_dump().keys())
-        if not pokedex_exists:
-            writer.writeheader()
-        writer.writerow(pokemon.model_dump())
+
+##def save_csv(pokemon:PokemonBase):
+
 
 ##pokedex = []
 
