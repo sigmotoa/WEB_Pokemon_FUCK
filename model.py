@@ -1,12 +1,7 @@
 from pydantic import BaseModel, Field
-from enum import Enum, auto
+from pokemon_type import *
 from typing import Optional
 
-class Tipo(str,Enum):
-    HIERBA = "hierba"
-    FUEGO = "fuego"
-    ELECTRICO = "electrico"
-    NORMAL = "normal"
 
 class PokemonBase(BaseModel):
     name: str = Field(..., min_length=4, max_length=50)
