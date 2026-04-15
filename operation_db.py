@@ -1,8 +1,8 @@
-from db import *
-from model import PokemonBase
+from db import SessionDep
+from model import PokemonBase, PokemonID
 
 
-def create_pokemon(pokemon: PokemonBase,session: SessionDep):
+def create_pokemon_db(pokemon, session: SessionDep) -> PokemonID:
     session.add(pokemon)
     session.commit()
     session.refresh(pokemon)

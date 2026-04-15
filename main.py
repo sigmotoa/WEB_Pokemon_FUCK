@@ -1,10 +1,10 @@
 from fastapi import FastAPI, HTTPException, Request
 from starlette.responses import JSONResponse
-from db import Session, create_all_tables
+from db import create_all_tables, SessionDep
 
 from model import PokemonBase, PokemonID, PokemonUpdate
 from operation_csv import createPokemon, showPokemons, showPokemon, updatePokemon, deletePokemon
-from operation_db import create_pokemon
+from operation_db import create_pokemon_db
 
 app = FastAPI(lifespan=create_all_tables)
 
@@ -20,9 +20,9 @@ async def http_exception_handler(request: Request, exc: HTTPException):
     return JSONResponse(status_code=exc.status_code, content={"message": f"{exc.detail} Ooops. TODOOO fallo"},)
 
 
-@app.post("/pokemon", response_model=PokemonID)
-async def catch_pokemon(pokemon: PokemonBase):
-    new_pokemon = create_pokemon(pokemon, Session)
+@app.post("/pokemon")
+async def catch_pokemon(pokemon: PokemonBase, session: SessionDep):
+    new_pokemon = create_pokemon_db(pokemon, session)
     ##pokedex.append(pokemon)
     return new_pokemon
 
