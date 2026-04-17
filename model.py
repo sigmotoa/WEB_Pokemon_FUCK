@@ -1,4 +1,3 @@
-from pydantic import BaseModel, Field
 from pokemon_type import *
 from sqlmodel import SQLModel, Field
 from typing import Optional
