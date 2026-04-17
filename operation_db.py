@@ -33,3 +33,12 @@ def updated_pokemon_db(pokemon_id:int,new_pokemon:PokemonUpdate, session: Sessio
     session.refresh(pokemon)
 
     return pokemon
+
+def kill_one_pokemon_db(pokemon_id:int, session: Session):
+    try:
+        pokemon=session.get_one(PokemonID, pokemon_id)
+        session.delete(pokemon)
+        session.commit()
+        return pokemon
+    except NoResultFound:
+        return None

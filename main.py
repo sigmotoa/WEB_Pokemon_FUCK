@@ -5,7 +5,7 @@ from db import create_all_tables, SessionDep
 
 from model import PokemonBase, PokemonID, PokemonUpdate
 from operation_csv import createPokemon, showPokemons, showPokemon, updatePokemon, deletePokemon
-from operation_db import create_pokemon_db, find_one_pokemon_db, all_pokemon_db, updated_pokemon_db
+from operation_db import create_pokemon_db, find_one_pokemon_db, all_pokemon_db, updated_pokemon_db, kill_one_pokemon_db
 
 app = FastAPI(lifespan=create_all_tables)
 
@@ -50,8 +50,8 @@ async def update_pokemon(id: int, pokemon_update: PokemonUpdate, session:Session
     return updated
 
 @app.delete("/pokemon/{id}", response_model=PokemonBase)
-async def delete_pokemon(id: int):
-    deleted = deletePokemon(id)
+async def delete_pokemon(id: int, session:SessionDep):
+    deleted = kill_one_pokemon_db(id, session)
     if not (deleted):
         raise HTTPException(status_code=404, detail="Pokemon has not been caught")
     return deleted
