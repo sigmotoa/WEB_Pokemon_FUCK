@@ -5,7 +5,7 @@ from db import create_all_tables, SessionDep
 
 from model import PokemonBase, PokemonID, PokemonUpdate
 from operation_csv import createPokemon, showPokemons, showPokemon, updatePokemon, deletePokemon
-from operation_db import create_pokemon_db, find_one_pokemon_db, all_pokemon_db
+from operation_db import create_pokemon_db, find_one_pokemon_db, all_pokemon_db, updated_pokemon_db
 
 app = FastAPI(lifespan=create_all_tables)
 
@@ -43,8 +43,8 @@ async def show_pokemon(id: int, session:SessionDep):
     return pokemon
 
 @app.patch("/pokemon/{id}", response_model=PokemonID)
-async def update_pokemon(id: int, pokemon_update: PokemonUpdate):
-    updated = updatePokemon(id, pokemon_update.model_dump(exclude_unset=True))
+async def update_pokemon(id: int, pokemon_update: PokemonUpdate, session:SessionDep):
+    updated = updated_pokemon_db(id, pokemon_update, session)
     if not (updated):
         raise HTTPException(status_code=404, detail="Pokemon has not been evolved")
     return updated
