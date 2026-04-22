@@ -5,3 +5,4 @@ class Tipo(str,Enum):
     FUEGO = "fuego"
     ELECTRICO = "electrico"
     NORMAL = "normal"
+    AGUA = "AGUA"
