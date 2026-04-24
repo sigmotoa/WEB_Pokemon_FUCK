@@ -1,8 +1,9 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, UploadFile, File
 from sqlmodel import Session
 from starlette.responses import JSONResponse
 from db import create_all_tables, SessionDep
 
+from utils import (save_img)
 from model import PokemonBase, PokemonID, PokemonUpdate
 from operation_csv import createPokemon, showPokemons, showPokemon, updatePokemon, deletePokemon
 from operation_db import create_pokemon_db, find_one_pokemon_db, all_pokemon_db, updated_pokemon_db, kill_one_pokemon_db
@@ -19,6 +20,12 @@ app = FastAPI(lifespan=create_all_tables)
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
     return JSONResponse(status_code=exc.status_code, content={"message": f"{exc.detail} Ooops. TODOOO fallo"},)
+
+
+@app.post("/image")
+async def image_save(file: UploadFile = File(...)):
+    path = save_img(file)
+    return {"saved at": path}
 
 
 @app.post("/pokemon", response_model=PokemonID, status_code=201)
