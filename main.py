@@ -3,7 +3,7 @@ from sqlmodel import Session
 from starlette.responses import JSONResponse
 from db import create_all_tables, SessionDep
 
-from utils import (save_img)
+from utils import (save_img_local, save_img_remote)
 from model import PokemonBase, PokemonID, PokemonUpdate
 from operation_csv import createPokemon, showPokemons, showPokemon, updatePokemon, deletePokemon
 from operation_db import create_pokemon_db, find_one_pokemon_db, all_pokemon_db, updated_pokemon_db, kill_one_pokemon_db
@@ -22,14 +22,21 @@ async def http_exception_handler(request: Request, exc: HTTPException):
     return JSONResponse(status_code=exc.status_code, content={"message": f"{exc.detail} Ooops. TODOOO fallo"},)
 
 
-@app.post("/image")
+@app.post("/image/local")
 async def image_save(file: UploadFile = File(...)):
-    path = save_img(file)
+    path = save_img_local(file)
     return {"saved at": path}
+
+@app.post("/image/remote")
+async def image_store(file:UploadFile = File(...)):
+    url = save_img_remote(file)
+    return {"saved at": url}
 
 
 @app.post("/pokemon", response_model=PokemonID, status_code=201)
 async def catch_pokemon(pokemon: PokemonBase, session:SessionDep):
+
+
      return create_pokemon_db(pokemon, session)
     ##pokedex.append(pokemon)
 
